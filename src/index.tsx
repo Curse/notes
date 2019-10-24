@@ -15,6 +15,7 @@ import styled, {ThemeProvider} from 'styled-components'
 import EditableDiv from './editable-div'
 import * as theme from './config/theme'
 import { createGlobalStyle } from "styled-components"
+import Editor from './editor/editor'
 
 import "normalize.css";
 
@@ -68,7 +69,7 @@ const App = () => (
 
 const Home = ({ match }) => <EditableDiv name="home"/>
 
-const Page = ({ match }) => <EditableDiv name={match.params.pageId}/>;
+const Page = ({ match }) => <Editor name={match.params.pageId}/>;
 
 const rootElement = document.getElementById("root");
 render(<App />, rootElement);
