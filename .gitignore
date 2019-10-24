@@ -2,3 +2,10 @@ node_modules
 package-lock.json
 src/react-app-env.d.ts
 build
+/.idea/vcs.xml
+/.idea/notes.iml
+/.idea/modules.xml
+/.idea/misc.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/.gitignore
+/.idea/$CACHE_FILE$

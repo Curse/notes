@@ -21,18 +21,16 @@ import "normalize.css";
 const store = configureStore({}, history)
 
 // Configure Firebase.
-const config = {
-  apiKey: "AIzaSyCn5nqB4w-zjYUEXnh3JuTV4ogkHkiZKRQ",
-  authDomain: "notesapp-ec179.firebaseapp.com",
-  databaseURL: "https://notesapp-ec179.firebaseio.com",
-  projectId: "notesapp-ec179",
-  storageBucket: "",
-  messagingSenderId: "795682020834",
-  appId: "1:795682020834:web:9aff90c0dc116ceca4edbb",
-  measurementId: "G-CW0PVM7GRW"
-};
-firebase.initializeApp(config);
-firebase.analytics();
+var firebaseConfig = {
+    apiKey: "AIzaSyBR2o33lqBdQsoHD4X1uppI93k2fVDeQsw",
+    authDomain: "curse-notes.firebaseapp.com",
+    databaseURL: "https://curse-notes.firebaseio.com",
+    projectId: "curse-notes",
+    storageBucket: "curse-notes.appspot.com",
+    messagingSenderId: "715608577655",
+    appId: "1:715608577655:web:b80968c875c4d3a1601872"
+  };
+firebase.initializeApp(firebaseConfig);
 firebase.auth().onAuthStateChanged( user => store.dispatch(setUser(user)))
 
 
