@@ -141,7 +141,7 @@ const EditableDiv = ({
                   <Mention
                     trigger="@"
                     data={suggestions}
-                    markup={'@__display__'}
+                    // markup={'@__display__'}
                     displayTransform={(id, display) => `@${display}`}
                   />
                 </MentionsInput>
