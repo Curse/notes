@@ -5,6 +5,15 @@ export const getState = state => state.notes
 
 export const getLabels = createSelector([getState], state => Object.keys(state).sort())
 
+export const getSuggestableNotes = createSelector([getState], state => {
+    return Object.keys(state).reduce((acc, noteLabel) => {
+        return [...acc, {
+            id: state[noteLabel].id,
+            display: noteLabel
+        }]
+    }, [])
+})
+
 export const getPaths = createSelector([getLabels], labels => {
     const specificPaths = {'home': '/notes/'}
     const specificLabels = Object.keys(specificPaths)
