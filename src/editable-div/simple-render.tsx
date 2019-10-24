@@ -3,8 +3,8 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 
 const SimpleRender = ({text}) => {
-    const labelRegex = /@\[(\w+)]/
-    const components = text.split(/(@\[\w+]+\(\w+\))/).map((a: string, i: number) => {
+    const labelRegex = /@\[?(\w+)]?/
+    const components = text.split(/(@\[?\w+]?\(?\w+\)?)/).map((a: string, i: number) => {
         if (a.startsWith("@")) {
             a = `@${a.match(labelRegex)[1]}`
         }

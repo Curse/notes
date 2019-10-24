@@ -12,22 +12,9 @@ const Wrap = styled.div`
     outline: none;
     position:relative;
     width: 100%;
-`
-
-const StyledMentionsInput = styled(MentionsInput)`
-    outline: none;
-    display: inline-block;
-    width: 100%;
-    white-space: pre-wrap;
-    word-break: break-word;
-    caret-color: rgba(0,0,0,0/9);
-    padding: 3px 2px;
-    min-height: 1em;
-    color: rgba(0,0,0,0.9);
-    border: none;
     
-    textarea {
-        border: none;
+    .editor {
+      opacity: ${({editing})=>editing?1:0};
     }
 `
 
@@ -42,22 +29,20 @@ const SaveButton = styled.button`
   }
 `
 
+const RenderedContent = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  pointer-events: none;
+  
+  a {
+    pointer-events: all;
+  }
+`
+
 const defaultContent = "Type here..."
 
-function getCaretPosition(editableDiv) {
-  var caretPos = 0,
-    sel, range;
-  if (window.getSelection) {
-    sel = window.getSelection();
-    if (sel.rangeCount) {
-      range = sel.getRangeAt(0);
-      if (range.commonAncestorContainer.parentNode == editableDiv) {
-        caretPos = range.endOffset;
-      }
-    }
-  }
-  return caretPos;
-}
 
 const EditableDiv = ({
     name,
@@ -71,8 +56,6 @@ const EditableDiv = ({
     } = note || {}
     const [editing, setEditing] = React.useState(false)
     const [contentState, setContentState] = React.useState(content)
-    const [cursorPosition, setCursorPosition] = React.useState(null)
-    const noteStart = React.useRef(null)
     const editableDiv = React.useRef(null)
 
 
@@ -83,20 +66,6 @@ const EditableDiv = ({
     React.useEffect(()=>{
         setContentState(content)
     },[content])
-
-    React.useEffect(()=>{
-        if (!editing){
-            return
-        }
-        console.log(cursorPosition)
-        console.log(editableDiv)
-        // @ts-ignore
-
-        window.setTimeout(() => {
-            editableDiv.current.focus()
-            editableDiv.current.setSelectionRange(cursorPosition, cursorPosition)
-        }, 1)
-    },[editing, cursorPosition])
 
     const persistEdit = () => {
         const newContent = contentState
@@ -125,32 +94,33 @@ const EditableDiv = ({
 
     const handleEditStart = e => {
         setEditing(true)
-        setCursorPosition(getCaretPosition(e.target))
     }
 
     return (
-        <Wrap ref={noteStart} tabIndex={0}>
-            {editing
-            ? <MentionsInput
-                    value={contentState}
-                    onChange={(e)=>setContentState(e.target.value)}
-                    style={defaultStyles}
-                    onKeyDown={handleKeyDown}
-                    inputRef={editableDiv}
-                >
-                  <Mention
-                    trigger="@"
-                    data={suggestions}
-                    // markup={'@__display__'}
-                    displayTransform={(id, display) => `@${display}`}
-                  />
-                </MentionsInput>
-            : <div
-                contentEditable
+        <Wrap tabIndex={0} editing={editing}>
+            <MentionsInput
+                key={'editable-content'}
+                value={contentState}
+                onChange={(e)=>setContentState(e.target.value)}
+                style={defaultStyles}
+                onKeyDown={handleKeyDown}
                 onClick={handleEditStart}
-                >
-                <SimpleRender text={content}/>
-              </div>}
+                inputRef={editableDiv}
+                className={'editor'}
+            >
+              <Mention
+                trigger="@"
+                data={suggestions}
+                displayTransform={(id, display) => `@${display}`}
+              />
+            </MentionsInput>
+            {!editing && <RenderedContent>
+                <div
+                    contentEditable
+                    >
+                    <SimpleRender text={content}/>
+                </div>
+            </RenderedContent>}
             {editing && <SaveButton onClick={()=>persistEdit()}>Save</SaveButton>}
         </Wrap>
     );
