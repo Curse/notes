@@ -6,13 +6,13 @@ export const getState = state => state.notes
 export const getLabels = createSelector([getState], state => Object.keys(state).sort())
 
 export const getPaths = createSelector([getLabels], labels => {
-    const specificPaths = {'home': '/'}
+    const specificPaths = {'home': '/notes/'}
     const specificLabels = Object.keys(specificPaths)
     return labels.map(label => {
         if (specificLabels.includes(label)) {
             return {label: label, path: specificPaths[label]}
         }
-        return {label: label, path: `/p/${label}/`}
+        return {label: label, path: `/notes/p/${label}/`}
     })
 })
 

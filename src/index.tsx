@@ -55,8 +55,8 @@ const App = () => (
         <ForceAuth>
           <UserBar/>
           <ConnectedRouter history={history}>
-            <Route exact={true} path="/" component={Home} />
-            <Route path="/p/:pageId" component={Page} />
+            <Route exact={true} path="/notes/" component={Home} />
+            <Route path="/notes/p/:pageId" component={Page} />
           </ConnectedRouter>
         </ForceAuth>
       </Wrap>
