@@ -52,9 +52,10 @@ const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
 
             // if this entity does not match anything, create it
             if (path === undefined) {
+                console.log(path)
                 evt.preventDefault()
                 createNoteFromTerm(term)
-                navigate(`${process.env.PUBLIC_URL}/p/${term}/`)
+                navigate(`/notes/p/${term}/`)
                 setSearchInput('')
                 evt.target.blur()
             }
@@ -66,7 +67,7 @@ const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
             <Select
                 ref={search}
                 inputValue={searchInput}
-                onChange={(option) => navigate(option.value)}
+                onChange={(option) => navigate(`/notes${option.value}`)}
                 options={options}
                 placeholder="Jump to a note stub"
                 styles={customStyles}

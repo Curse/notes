@@ -49,6 +49,7 @@ const RenderedContent = styled.div`
   right: 0;
   pointer-events: none;
   white-space: pre;
+  word-break: break-word;
   a {
     pointer-events: all;
   }

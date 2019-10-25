@@ -12,7 +12,7 @@ const SimpleRender = ({text}) => {
         // @ts-ignore
         <Link
             contentEditable={false}
-            to={`${process.env.PUBLIC_URL}/p/` + a.slice(1)}
+            to={`/notes/p/` + a.slice(1)}
             onFocus={e => e.stopPropagation()}
             key={i}
         >
