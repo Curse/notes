@@ -2,12 +2,6 @@ import * as types from './action-types'
 import snakeCase from 'lodash/snakeCase'
 
 const initialState = {
-    home: `This is a simple note taking app.
-
-    Prepend any world with @ to create a new page, like @this.
-
-    The entire page is editable, apart from the Home link at the top.`,
-    this: `Isn't this easy?`
 };
 
 function handleSetNote(state, {id, label, content}) {
