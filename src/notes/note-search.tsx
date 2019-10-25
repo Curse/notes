@@ -34,30 +34,30 @@ const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
             if (evt.shiftKey && evt.ctrlKey && evt.key === 'F') {
                 search.current.focus()
             }
-            if (evt.key === 'Enter') {
-                // determine if the input value is an existing entity
-                const term = evt.target.value
-                const path = paths.find(function(path) {
-                    return path.label.startsWith(term)
-                })
-
-                console.log(term)
-                console.log(path)
-
-                // if this entity does not match anything, create it
-                if (path === undefined) {
-                    createNoteFromTerm(term)
-                    navigate(`${process.env.PUBLIC_URL}/p/${term}/`)
-                } else {
-                    evt.preventDefault()
-                }
-            }
         }
         document.addEventListener('keydown', callback)
         return () => {
           document.removeEventListener('keydown', callback)
         }
       }, [paths])
+
+    const keyDownHandler = (evt) => {
+        if (evt.key === 'Enter') {
+            // determine if the input value is an existing entity
+            const term = evt.target.value
+            const path = paths.find(function(path) {
+                return path.label.startsWith(term)
+            })
+
+            // if this entity does not match anything, create it
+            if (path === undefined) {
+                createNoteFromTerm(term)
+                navigate(`${process.env.PUBLIC_URL}/p/${term}/`)
+            } else {
+                evt.preventDefault()
+            }
+        }
+    }
 
     return (
         <Wrap>
@@ -69,6 +69,7 @@ const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
                 placeholder="Jump to a note stub"
                 styles={customStyles}
                 noOptionsMessage={({inputValue})=>`Press [Enter] to create "${inputValue}"`}
+                onKeyDown={keyDownHandler}
             />
         </Wrap>
     )
