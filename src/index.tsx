@@ -67,7 +67,7 @@ const NotesBar = styled.div`
     position: fixed;
     bottom: 0;
     right: 30px;
-    width: 450px;
+    
     border-color: ${({theme})=>theme.highlight};
     border-style: solid;
     border-width: 3px;
@@ -76,8 +76,10 @@ const NotesBar = styled.div`
     border-top-right-radius: 5px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     height: 31px;
+    width: 180px;
       &.open {
         height: 400px;
+        width: 450px;
       }
   }
   
