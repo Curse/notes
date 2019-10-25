@@ -59,6 +59,32 @@ const EditableDiv = ({
     const editableDiv = React.useRef(null)
 
 
+    const getCaretCharacterOffsetWithin = (element) => {
+        let caretOffset = 0;
+        let doc = element.ownerDocument || element.document;
+        let win = doc.defaultView || doc.parentWindow;
+        let sel;
+        if (typeof win.getSelection != "undefined") {
+            console.log('not undefined')
+            sel = win.getSelection();
+            if (sel.rangeCount > 0) {
+                var range = win.getSelection().getRangeAt(0);
+                var preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(element);
+                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                caretOffset = preCaretRange.toString().length;
+            }
+        } else if ((sel = doc.selection) && sel.type != "Control") {
+            var textRange = sel.createRange();
+            var preCaretTextRange = doc.body.createTextRange();
+            preCaretTextRange.moveToElementText(element);
+            preCaretTextRange.setEndPoint("EndToEnd", textRange);
+            caretOffset = preCaretTextRange.text.length;
+        }
+        console.log(caretOffset)
+        return caretOffset;
+    }
+
     const resetFocus = () => {
         // noteStart.current.focus()
     }
@@ -96,12 +122,19 @@ const EditableDiv = ({
         setEditing(true)
     }
 
+    const handleOnChange = (event, newValue) => {
+        console.log(editableDiv.current)
+        let cursorPosition = getCaretCharacterOffsetWithin(editableDiv.current)
+        console.log(cursorPosition)
+        setContentState(event.target.value)
+    }
+
     return (
         <Wrap tabIndex={0} editing={editing}>
             <MentionsInput
                 key={'editable-content'}
                 value={contentState}
-                onChange={(e)=>setContentState(e.target.value)}
+                onChange={handleOnChange}
                 style={defaultStyles}
                 onKeyDown={handleKeyDown}
                 onClick={handleEditStart}
@@ -115,9 +148,7 @@ const EditableDiv = ({
               />
             </MentionsInput>
             {!editing && <RenderedContent>
-                <div
-                    contentEditable
-                    >
+                <div>
                     <SimpleRender text={content}/>
                 </div>
             </RenderedContent>}

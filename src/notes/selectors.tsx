@@ -3,6 +3,12 @@ import snakeCase from 'lodash/snakeCase'
 
 export const getState = state => state.notes
 
+export const getNotes = createSelector([getState], state => {
+    return Object.keys(state).map(noteLabel => {
+        return [noteLabel, state[noteLabel]]
+    })
+})
+
 export const getLabels = createSelector([getState], state => Object.keys(state).sort())
 
 export const getSuggestableNotes = createSelector([getState], state => {
