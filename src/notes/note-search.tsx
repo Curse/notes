@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux'
 import * as notesSelectors from './selectors'
 import styled from 'styled-components'
 import { push } from 'connected-react-router'
+import { setNote } from "./actions";
 
 const Wrap = styled.div`
     position: relative;
@@ -24,32 +25,55 @@ const customStyles = {
 }
 
 
-const NoteSearch = ({paths, navigate}) => {
+const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
     const search = React.useRef(null)
     const options = paths.map(path => ({value: path.path, label: `@${path.label}`}))
+    const [searchInput, setSearchInput] = React.useState('')
 
     React.useEffect(() => {
         const callback = (evt) => {
-          if (evt.shiftKey && evt.ctrlKey && evt.key === 'F') {
-            search.current.focus()
-          }
+            if (evt.shiftKey && evt.ctrlKey && evt.key === 'F') {
+                search.current.focus()
+            }
         }
         document.addEventListener('keydown', callback)
         return () => {
           document.removeEventListener('keydown', callback)
         }
-      }, [])
+      }, [paths])
+
+    const keyDownHandler = (evt) => {
+        if (evt.key === 'Enter') {
+            // determine if the input value is an existing entity
+            const term = evt.target.value
+            const path = paths.find(function(path) {
+                return path.label.includes(term)
+            })
+
+            // if this entity does not match anything, create it
+            if (path === undefined) {
+                evt.preventDefault()
+                createNoteFromTerm(term)
+                navigate(`${process.env.PUBLIC_URL}/p/${term}/`)
+                setSearchInput('')
+                evt.target.blur()
+            }
+        }
+    }
 
     return (
         <Wrap>
             <Select
                 ref={search}
-                value=''
-                onChange={(option) => navigate(option.value)} 
+                inputValue={searchInput}
+                onChange={(option) => navigate(option.value)}
                 options={options}
-                className="bbbababb"
                 placeholder="Jump to a note stub"
                 styles={customStyles}
+                noOptionsMessage={({inputValue})=>`Press [Enter] to create "${inputValue}"`}
+                onKeyDown={keyDownHandler}
+                onInputChange={(e)=>{
+                    console.log(e); setSearchInput(e)}}
             />
         </Wrap>
     )
@@ -61,7 +85,12 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-    navigate: (label) => push(label)
+    navigate: (label) => push(label),
+    createNoteFromTerm: (label) => setNote({
+        label,
+        content: '',
+        persist: true
+    })
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(NoteSearch)
