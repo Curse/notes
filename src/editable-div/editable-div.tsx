@@ -8,13 +8,20 @@ import styled from 'styled-components'
 import { MentionsInput, Mention } from 'react-mentions'
 import defaultStyles from './defaultStyles'
 
+interface EditingStyleChangeFunction {
+    editing: boolean
+}
+
 const Wrap = styled.div`
     outline: none;
     position:relative;
     width: 100%;
     
     .editor {
-      opacity: ${({editing})=>editing?1:0};
+      opacity: 0;
+    }
+    .editing .editor{
+      opacity: 1;
     }
 `
 
@@ -97,7 +104,7 @@ const EditableDiv = ({
     }
 
     return (
-        <Wrap tabIndex={0} editing={editing}>
+        <Wrap tabIndex={0} className={editing ? 'editing': ''}>
             <MentionsInput
                 key={'editable-content'}
                 value={contentState}
