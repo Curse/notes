@@ -2,6 +2,7 @@ node_modules
 package-lock.json
 src/react-app-env.d.ts
 build
+/.idea/
 /.idea/vcs.xml
 /.idea/notes.iml
 /.idea/modules.xml
