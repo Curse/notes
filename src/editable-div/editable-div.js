@@ -123,9 +123,6 @@ const EditableDiv = ({
     }
 
     const handleOnChange = (event, newValue) => {
-        console.log(editableDiv.current)
-        let cursorPosition = getCaretCharacterOffsetWithin(editableDiv.current)
-        console.log(cursorPosition)
         setContentState(event.target.value)
     }
 
