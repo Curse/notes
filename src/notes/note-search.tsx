@@ -33,6 +33,10 @@ const NoteSearch = ({paths, navigate}) => {
           if (evt.shiftKey && evt.ctrlKey && evt.key === 'F') {
             search.current.focus()
           }
+          if (evt.key === 'Enter') {
+              evt.preventDefault()
+              console.log('create')
+          }
         }
         document.addEventListener('keydown', callback)
         return () => {
@@ -45,11 +49,13 @@ const NoteSearch = ({paths, navigate}) => {
             <Select
                 ref={search}
                 value=''
-                onChange={(option) => navigate(option.value)} 
+                onChange={(option) => navigate(option.value)}
+                onInputChange={console.log}
                 options={options}
                 className="bbbababb"
                 placeholder="Jump to a note stub"
                 styles={customStyles}
+                noOptionsMessage={({inputValue})=>`Press [Enter] to create "${inputValue}"`}
             />
         </Wrap>
     )
