@@ -13,16 +13,24 @@ interface EditingStyleChangeFunction {
 }
 
 const Wrap = styled.div`
-    outline: none;
-    position:relative;
-    width: 100%;
+    padding: 0 5px;
     
     .editor {
       opacity: 0;
     }
-    .editing .editor{
+    &.editing .editor{
       opacity: 1;
     }
+`
+
+const ContentWrap = styled.div`
+    outline: none;
+    position: relative;
+    width: 100%;
+    font-size: 14px;
+    width: 100%;
+    
+    
 `
 
 const SaveButton = styled.button`
@@ -46,6 +54,13 @@ const RenderedContent = styled.div`
   a {
     pointer-events: all;
   }
+`
+
+const NoteLabel = styled.h2`
+    margin: 10px 0 0 0;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
 `
 
 const defaultContent = "Type here..."
@@ -104,31 +119,35 @@ const EditableDiv = ({
     }
 
     return (
-        <Wrap tabIndex={0} className={editing ? 'editing': ''}>
-            <MentionsInput
-                key={'editable-content'}
-                value={contentState}
-                onChange={(e)=>setContentState(e.target.value)}
-                style={defaultStyles}
-                onKeyDown={handleKeyDown}
-                onClick={handleEditStart}
-                inputRef={editableDiv}
-                className={'editor'}
-            >
-              <Mention
-                trigger="@"
-                data={suggestions}
-                displayTransform={(id, display) => `@${display}`}
-              />
-            </MentionsInput>
-            {!editing && <RenderedContent>
-                <div
-                    contentEditable
-                    >
-                    <SimpleRender text={content}/>
-                </div>
-            </RenderedContent>}
-            {editing && <SaveButton onClick={()=>persistEdit()}>Save</SaveButton>}
+        <Wrap className={editing ? 'editing': ''}>
+            <NoteLabel>{name}</NoteLabel>
+            <ContentWrap>
+                <MentionsInput
+                    key={'editable-content'}
+                    value={contentState}
+                    onChange={(e)=>setContentState(e.target.value)}
+                    style={defaultStyles}
+                    onKeyDown={handleKeyDown}
+                    onClick={handleEditStart}
+                    inputRef={editableDiv}
+                    className={'editor'}
+                >
+                  <Mention
+                    trigger="@"
+                    data={suggestions}
+                    displayTransform={(id, display) => `@${display}`}
+                  />
+                </MentionsInput>
+                {!editing && <RenderedContent>
+                    <div
+                        contentEditable
+                        suppressContentEditableWarning={true}
+                        >
+                        <SimpleRender text={content}/>
+                    </div>
+                </RenderedContent>}
+                {editing && <SaveButton onClick={()=>persistEdit()}>Save</SaveButton>}
+            </ContentWrap>
         </Wrap>
     );
 };
