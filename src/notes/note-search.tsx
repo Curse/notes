@@ -28,6 +28,7 @@ const customStyles = {
 const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
     const search = React.useRef(null)
     const options = paths.map(path => ({value: path.path, label: `@${path.label}`}))
+    const [searchInput, setSearchInput] = React.useState('')
 
     React.useEffect(() => {
         const callback = (evt) => {
@@ -46,15 +47,16 @@ const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
             // determine if the input value is an existing entity
             const term = evt.target.value
             const path = paths.find(function(path) {
-                return path.label.startsWith(term)
+                return path.label.includes(term)
             })
 
             // if this entity does not match anything, create it
             if (path === undefined) {
+                evt.preventDefault()
                 createNoteFromTerm(term)
                 navigate(`${process.env.PUBLIC_URL}/p/${term}/`)
-            } else {
-                evt.preventDefault()
+                setSearchInput('')
+                evt.target.blur()
             }
         }
     }
@@ -63,13 +65,15 @@ const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
         <Wrap>
             <Select
                 ref={search}
-                value=''
+                inputValue={searchInput}
                 onChange={(option) => navigate(option.value)}
                 options={options}
                 placeholder="Jump to a note stub"
                 styles={customStyles}
                 noOptionsMessage={({inputValue})=>`Press [Enter] to create "${inputValue}"`}
                 onKeyDown={keyDownHandler}
+                onInputChange={(e)=>{
+                    console.log(e); setSearchInput(e)}}
             />
         </Wrap>
     )
