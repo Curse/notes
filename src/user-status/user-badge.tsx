@@ -66,10 +66,10 @@ const Avatar = styled.img`
 
 const UserBadge = ({className, user, currentLocation}) => {
     const samePage = user.location === currentLocation.pathname
-    const label = user.location.replace(/^\/p\//, '').replace(/\/$/, '')
+    const label = user.location.replace(/^\/notes\/p\//, '').replace(/\/$/, '')
     return (
     <Outer className={className} title={user.displayName} samePage={samePage}>
-        <Link to={`${process.env.PUBLIC_URL}${user.location}`}>
+        <Link to={`${user.location}`}>
             <Wrap>
                 <Label className='label'>
                     {label}
