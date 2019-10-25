@@ -3,8 +3,12 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 
 const SimpleRender = ({text}) => {
-    const components = text.split(/(@\w+)/).map((a: string, i: number) =>
-        a.startsWith("@") ? (
+    const labelRegex = /@\[?(\w+)]?/
+    const components = text.split(/(@\[?\w+]?\(?\w+\)?)/).map((a: string, i: number) => {
+        if (a.startsWith("@")) {
+            a = `@${a.match(labelRegex)[1]}`
+        }
+        return a.startsWith("@") ? (
         // @ts-ignore
         <Link
             contentEditable={false}
@@ -17,6 +21,7 @@ const SimpleRender = ({text}) => {
         ) : (
         a
         )
+    }
     );
     return components;
 };

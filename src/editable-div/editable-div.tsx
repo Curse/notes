@@ -1,31 +1,59 @@
 import React from 'react'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import {makeGetNoteByLabel} from '../notes/selectors'
+import {getSuggestableNotes, makeGetNoteByLabel} from '../notes/selectors'
 import {setNote} from '../notes/actions'
 import SimpleRender from './simple-render'
 import styled from 'styled-components'
+import { MentionsInput, Mention } from 'react-mentions'
+import defaultStyles from './defaultStyles'
+
+interface EditingStyleChangeFunction {
+    editing: boolean
+}
 
 const Wrap = styled.div`
     padding: 0 5px;
+    
+    .editor {
+      opacity: 0;
+    }
+    &.editing .editor{
+      opacity: 1;
+    }
 `
 
 const ContentWrap = styled.div`
     outline: none;
+    position: relative;
     width: 100%;
+    font-size: 14px;
+    width: 100%;
+    
+    
 `
 
-const Text = styled.div`
-    font-size: 14px;
-    outline: none;
-    display: inline-block;
-    width: 100%;
-    white-space: pre-wrap;
-    word-break: break-word;
-    caret-color: rgba(0,0,0,0/9);
-    padding: 3px 2px;
-    min-height: 1em;
-    color: rgba(0,0,0,0.9);
+const SaveButton = styled.button`
+  position:absolute;
+  top: 0;
+  right: 0;
+  opacity: 0.5;
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+`
+
+const RenderedContent = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  pointer-events: none;
+  
+  a {
+    pointer-events: all;
+  }
 `
 
 const NoteLabel = styled.h2`
@@ -37,9 +65,11 @@ const NoteLabel = styled.h2`
 
 const defaultContent = "Type here..."
 
+
 const EditableDiv = ({
     name,
     note,
+    suggestions,
     setContent,
 }) => {
     const {
@@ -47,28 +77,20 @@ const EditableDiv = ({
         content = defaultContent,
     } = note || {}
     const [editing, setEditing] = React.useState(false)
-    const noteStart = React.useRef(null)
+    const [contentState, setContentState] = React.useState(content)
     const editableDiv = React.useRef(null)
 
+
     const resetFocus = () => {
-        noteStart.current.focus()
+        // noteStart.current.focus()
     }
 
     React.useEffect(()=>{
-        if (!editing){
-            return
-        }
-        const handler = (event) => {
-            if (event.target !== editableDiv.current) {
-                resetFocus()
-            }
-        }
-        document.addEventListener('click', handler)
-        return () => document.removeEventListener('click', handler)
-    },[editing])
+        setContentState(content)
+    },[content])
 
     const persistEdit = () => {
-        const newContent = editableDiv.current.innerText
+        const newContent = contentState
         setEditing(false)
         if (newContent !== content) {
             setContent(id, newContent)
@@ -92,24 +114,39 @@ const EditableDiv = ({
         }
     }
 
+    const handleEditStart = e => {
+        setEditing(true)
+    }
+
     return (
-        <Wrap>
+        <Wrap className={editing ? 'editing': ''}>
             <NoteLabel>{name}</NoteLabel>
             <ContentWrap ref={noteStart} tabIndex={0}>
-                <Text
-                    id={name}
-                    ref={editableDiv}
-                    contentEditable
-                    onFocus={e => setEditing(true)}
-                    onBlur={handleBlur}
+                <MentionsInput
+                    key={'editable-content'}
+                    value={contentState}
+                    onChange={(e)=>setContentState(e.target.value)}
+                    style={defaultStyles}
                     onKeyDown={handleKeyDown}
-                    onKeyUp={()=>console.log(editableDiv.current.innerHTML)}
-                    suppressContentEditableWarning={true}
+                    onClick={handleEditStart}
+                    inputRef={editableDiv}
+                    className={'editor'}
                 >
-                {editing
-                    ? content
-                    : <SimpleRender text={content}/>}
-                </Text>
+                  <Mention
+                    trigger="@"
+                    data={suggestions}
+                    displayTransform={(id, display) => `@${display}`}
+                  />
+                </MentionsInput>
+                {!editing && <RenderedContent>
+                    <div
+                        contentEditable
+                        suppressContentEditableWarning={true}
+                        >
+                        <SimpleRender text={content}/>
+                    </div>
+                </RenderedContent>}
+                {editing && <SaveButton onClick={()=>persistEdit()}>Save</SaveButton>}
             </ContentWrap>
         </Wrap>
     );
@@ -119,6 +156,7 @@ const mapStateToProps = (state, ownProps) => {
     const getContentByLabel = makeGetNoteByLabel(ownProps.name)
     return {
         note: getContentByLabel(state),
+        suggestions: getSuggestableNotes(state),
     }
 }
 
