@@ -94,7 +94,7 @@ const SearchCloseButton = styled.button`
 const SearchBar = ({notes, paths, navigate}) => {
     const searchArea = React.useRef(null)
     const searchInput = React.useRef(null)
-    const [searchQuery, setSearchQuery] = React.useState('')
+
     const [editing, setEditing] = React.useState(false)
     const [position, setPosition] = React.useState(0)
     const [filteredNotes, setFilteredNotes] = React.useState([])
@@ -151,15 +151,22 @@ const SearchBar = ({notes, paths, navigate}) => {
     }, [editing, position, filteredNotes, setPosition, updateDisplayedPage])
 
     const handleOnChange = e => {
-        setSearchQuery(e.target.value)
-        setFilteredNotes(notes.filter(x => filter(x)))
+        console.log(e.target.value)
+        let s = e.target.value
+            .trim()
+            .toLowerCase()
+            .replace(/ /g, '|')
+        setFilteredNotes(notes.filter(x => filter(x, s)))
         setPosition(-1)
     }
 
-    const filter = note => {
-        return note &&
-            ((note[0] && note[0].includes(searchQuery))
-                || (note[1] && note[1].content && note[1].content.includes(searchQuery)))
+    const filter = (note, regex) => {
+        const labelResult = note[0].search(regex.replace('@', '')) > -1
+        const contentResult = note[1].content.search(regex) > -1
+
+        return note && (labelResult || contentResult)
+            // ((note[0] && note[0].includes(searchQuery))
+            //     || (note[1] && note[1].content && note[1].content.includes(searchQuery)))
     }
 
     const handlePreview = noteLabel => {
