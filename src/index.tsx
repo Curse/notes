@@ -18,7 +18,6 @@ import { createGlobalStyle } from "styled-components"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDoubleUp } from '@fortawesome/free-solid-svg-icons/faAngleDoubleUp'
 import { faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons/faAngleDoubleDown'
-import bgi from './sheet-bg.png'
 import UserStatus from './user-status/user-status'
 
 import "normalize.css";
@@ -48,8 +47,8 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     background-position: center top;
-    @media (min-width: 800px) {
-      background-image: url(${bgi});
+    @media (max-width: 799px) {
+      background-image: none !important;    
     }
   }
   
