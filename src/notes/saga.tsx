@@ -12,7 +12,7 @@ function* createFirebaseChannel(user) {
     const database = firebase.firestore()
 
     return eventChannel(emiter => {
-        const listener = database.collection("notes").where('owner', '==', user.uid).onSnapshot(snapshot => {
+        const listener = database.collection("notes").onSnapshot(snapshot => {
           snapshot.docChanges().forEach(change => emiter({id: change.doc.id, data: change.doc.data()}))
         })
   
