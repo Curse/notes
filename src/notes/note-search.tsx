@@ -35,24 +35,22 @@ const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
                 search.current.focus()
             }
             if (evt.key === 'Enter') {
-                evt.preventDefault()
-
                 // determine if the input value is an existing entity
                 const term = evt.target.value
                 const path = paths.find(function(path) {
-                  return term === path.label
+                    return path.label.startsWith(term)
                 })
 
                 console.log(term)
                 console.log(path)
 
-                // if not, create a new entity
+                // if this entity does not match anything, create it
                 if (path === undefined) {
                     createNoteFromTerm(term)
+                    navigate(`${process.env.PUBLIC_URL}/p/${term}/`)
+                } else {
+                    evt.preventDefault()
                 }
-
-                // navigate to the entity
-                navigate(term)
             }
         }
         document.addEventListener('keydown', callback)
@@ -67,9 +65,7 @@ const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
                 ref={search}
                 value=''
                 onChange={(option) => navigate(option.value)}
-                onInputChange={console.log}
                 options={options}
-                className="bbbababb"
                 placeholder="Jump to a note stub"
                 styles={customStyles}
                 noOptionsMessage={({inputValue})=>`Press [Enter] to create "${inputValue}"`}
