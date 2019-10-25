@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux'
 import * as notesSelectors from './selectors'
 import styled from 'styled-components'
 import { push } from 'connected-react-router'
+import { setNote } from "./actions";
 
 const Wrap = styled.div`
     position: relative;
@@ -24,25 +25,41 @@ const customStyles = {
 }
 
 
-const NoteSearch = ({paths, navigate}) => {
+const NoteSearch = ({paths, navigate, createNoteFromTerm}) => {
     const search = React.useRef(null)
     const options = paths.map(path => ({value: path.path, label: `@${path.label}`}))
 
     React.useEffect(() => {
         const callback = (evt) => {
-          if (evt.shiftKey && evt.ctrlKey && evt.key === 'F') {
-            search.current.focus()
-          }
-          if (evt.key === 'Enter') {
-              evt.preventDefault()
-              console.log('create')
-          }
+            if (evt.shiftKey && evt.ctrlKey && evt.key === 'F') {
+                search.current.focus()
+            }
+            if (evt.key === 'Enter') {
+                evt.preventDefault()
+
+                // determine if the input value is an existing entity
+                const term = evt.target.value
+                const path = paths.find(function(path) {
+                  return term === path.label
+                })
+
+                console.log(term)
+                console.log(path)
+
+                // if not, create a new entity
+                if (path === undefined) {
+                    createNoteFromTerm(term)
+                }
+
+                // navigate to the entity
+                navigate(term)
+            }
         }
         document.addEventListener('keydown', callback)
         return () => {
           document.removeEventListener('keydown', callback)
         }
-      }, [])
+      }, [paths])
 
     return (
         <Wrap>
@@ -67,7 +84,12 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-    navigate: (label) => push(label)
+    navigate: (label) => push(label),
+    createNoteFromTerm: (label) => setNote({
+        label,
+        content: '',
+        persist: true
+    })
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(NoteSearch)
