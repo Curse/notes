@@ -48,7 +48,6 @@ function* persistNote({id, label, content}) {
     const database = firebase.firestore()
     if (!id) {
         yield database.collection("notes").add({
-            owner: user.uid,
             label,
             content,
         })
