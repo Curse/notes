@@ -98,8 +98,8 @@ const App = () => {
               <NotesHeader onClick={()=>setOpen(!open)}>Road to Redemption<FontAwesomeIcon icon={open ? faAngleDoubleDown: faAngleDoubleUp} /></NotesHeader>
               <UserBar/>
               <ConnectedRouter history={history}>
-                <Route exact={true} path="/notes/" component={Home} />
-                <Route path="/notes/p/:pageId" component={Page} />
+                <Route exact={true} path={`${process.env.PUBLIC_URL}/`} component={Home} />
+                <Route path={`${process.env.PUBLIC_URL}/p/:pageId`} component={Page} />
               </ConnectedRouter>
             </NotesBar>
           </ForceAuth>

@@ -121,7 +121,7 @@ const EditableDiv = ({
     return (
         <Wrap className={editing ? 'editing': ''}>
             <NoteLabel>{name}</NoteLabel>
-            <ContentWrap ref={noteStart} tabIndex={0}>
+            <ContentWrap>
                 <MentionsInput
                     key={'editable-content'}
                     value={contentState}

@@ -15,13 +15,13 @@ export const getSuggestableNotes = createSelector([getState], state => {
 })
 
 export const getPaths = createSelector([getLabels], labels => {
-    const specificPaths = {'home': '/notes/'}
+    const specificPaths = {'home': `${process.env.PUBLIC_URL}/`}
     const specificLabels = Object.keys(specificPaths)
     return labels.map(label => {
         if (specificLabels.includes(label)) {
             return {label: label, path: specificPaths[label]}
         }
-        return {label: label, path: `/notes/p/${label}/`}
+        return {label: label, path: `${process.env.PUBLIC_URL}/p/${label}/`}
     })
 })
 
