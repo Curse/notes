@@ -123,24 +123,24 @@ const SearchBar = ({notes, paths, navigate}) => {
                         evt.preventDefault()
                         break;
                     }
-                    case 'ArrowUp': {
-                        if (position > 0) {
-                            console.log('Previous Position: ' + position)
-                            setPosition(position - 1)
-                            console.log('Displaying Position: ' + position)
-                            updateDisplayedPage()
-                            evt.preventDefault()
-                            break;
-                        }
-                    }
-                    case 'ArrowDown': {
-                        if (position < filteredNotes.length) {
-                            setPosition(position + 1)
-                            updateDisplayedPage()
-                            evt.preventDefault()
-                            break;
-                        }
-                    }
+                    // case 'ArrowUp': {
+                    //     if (position > 0) {
+                    //         console.log('Previous Position: ' + position)
+                    //         setPosition(position - 1)
+                    //         console.log('Displaying Position: ' + position)
+                    //         updateDisplayedPage()
+                    //         evt.preventDefault()
+                    //         break;
+                    //     }
+                    // }
+                    // case 'ArrowDown': {
+                    //     if (position < filteredNotes.length) {
+                    //         setPosition(position + 1)
+                    //         updateDisplayedPage()
+                    //         evt.preventDefault()
+                    //         break;
+                    //     }
+                    // }
                 }
             }
         }
@@ -162,6 +162,11 @@ const SearchBar = ({notes, paths, navigate}) => {
                 || (note[1] && note[1].content && note[1].content.includes(searchQuery)))
     }
 
+    const handlePreview = noteLabel => {
+        const path = paths.find(x => x.label === noteLabel).path
+        navigate(path)
+    }
+
     const handleResultItemOnClick = (noteLabel) => {
         const path = paths.find(x => x.label === noteLabel).path
         navigate(path)
@@ -172,7 +177,9 @@ const SearchBar = ({notes, paths, navigate}) => {
         <SearchResultItem
             className={(index==position ? '--selected' : '')}
             key={n[1].id}
-            onClick={e => handleResultItemOnClick(n[0])}>
+            onFocus={() => handlePreview(n[0])}
+            onMouseOver={() => handlePreview(n[0])}
+            onClick={() => handleResultItemOnClick(n[0])}>
             <SearchResultItemLabel>@{n[0]}</SearchResultItemLabel>
             <SearchResultItemDetail>{n[1].content}</SearchResultItemDetail>
         </SearchResultItem>
