@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDoubleUp } from '@fortawesome/free-solid-svg-icons/faAngleDoubleUp'
 import { faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons/faAngleDoubleDown'
 import bgi from './sheet-bg.png'
+import UserStatus from './user-status/user-status'
 
 import "normalize.css";
 
@@ -61,6 +62,8 @@ const Wrap = styled.div`
 const NotesBar = styled.div`
   background-color: #fff;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   
   @media (min-width: 800px) {
     min-height: auto;
@@ -81,10 +84,13 @@ const NotesBar = styled.div`
         height: 400px;
         width: 450px;
       }
-  }
-  
+  } 
 `
 
+const StyledUserStatus = styled(UserStatus)`
+  bottom: 0;
+  right: 0;
+`
 
 const NotesHeader = styled.div`
   background-color: ${({theme})=>theme.highlight};
@@ -96,25 +102,33 @@ const NotesHeader = styled.div`
   cursor: pointer;
 `
 
+const NoteContainer = styled.div`
+  flex-grow: 1;
+  flex-shrink: 1;
+`
+
 const App = () => {
   const [open, setOpen] = React.useState(true)
 
   return (
     <ThemeProvider theme={theme}>
       <Provider store={store}>
-        <Wrap>
-          <GlobalStyle/>
-          <ForceAuth>
-            <NotesBar className={open ? 'open' : ''}>
-              <NotesHeader onClick={()=>setOpen(!open)}>Road to Redemption<FontAwesomeIcon icon={open ? faAngleDoubleDown: faAngleDoubleUp} /></NotesHeader>
-              <UserBar/>
-              <ConnectedRouter history={history}>
-                <Route exact={true} path={`${process.env.PUBLIC_URL}/`} component={Home} />
-                <Route path={`${process.env.PUBLIC_URL}/p/:pageId`} component={Page} />
-              </ConnectedRouter>
-            </NotesBar>
-          </ForceAuth>
-        </Wrap>
+        <ConnectedRouter history={history}>
+            <Wrap>
+              <GlobalStyle/>
+              <ForceAuth>
+                <NotesBar className={open ? 'open' : ''}>
+                  <NotesHeader onClick={()=>setOpen(!open)}>Road to Redemption<FontAwesomeIcon icon={open ? faAngleDoubleDown: faAngleDoubleUp} /></NotesHeader>
+                  <UserBar/>
+                    <NoteContainer>
+                        <Route exact={true} path={`${process.env.PUBLIC_URL}/`} component={Home} />
+                        <Route path={`${process.env.PUBLIC_URL}/p/:pageId`} component={Page} />
+                    </NoteContainer>
+                  <StyledUserStatus/>
+                </NotesBar>
+              </ForceAuth>
+            </Wrap>
+        </ConnectedRouter>
       </Provider>
     </ThemeProvider>
   )

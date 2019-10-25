@@ -97,10 +97,6 @@ const EditableDiv = ({
         }
     }
 
-    const handleBlur = e => {
-        persistEdit()
-    };
-
     const handleKeyDown = e => {
         if (e.key === 'Escape') {
             setEditing(false)
