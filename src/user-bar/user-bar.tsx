@@ -44,10 +44,10 @@ const Avatar = styled.img`
 const UserBar = ({user}) => (
     <TopBar>
         <NoteSearch/>
-        <LogoutButton onClick={() => firebase.auth().signOut()}>
+        {/* <LogoutButton onClick={() => firebase.auth().signOut()}>
             <Avatar src={user.photoURL}/>
             <div>Logout</div>
-        </LogoutButton>
+        </LogoutButton> */}
     </TopBar>
 )
 

@@ -9,7 +9,6 @@ import { push } from 'connected-react-router'
 const Wrap = styled.div`
     position: relative;
     width: 100%;
-    height: 24px;
 
     .react-autosuggest__container {
         background-color: red;

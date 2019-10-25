@@ -7,11 +7,16 @@ import SimpleRender from './simple-render'
 import styled from 'styled-components'
 
 const Wrap = styled.div`
+    padding: 0 5px;
+`
+
+const ContentWrap = styled.div`
     outline: none;
     width: 100%;
 `
 
 const Text = styled.div`
+    font-size: 14px;
     outline: none;
     display: inline-block;
     width: 100%;
@@ -21,6 +26,13 @@ const Text = styled.div`
     padding: 3px 2px;
     min-height: 1em;
     color: rgba(0,0,0,0.9);
+`
+
+const NoteLabel = styled.h2`
+    margin: 10px 0 0 0;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
 `
 
 const defaultContent = "Type here..."
@@ -81,21 +93,24 @@ const EditableDiv = ({
     }
 
     return (
-        <Wrap ref={noteStart} tabIndex={0}>
-            <Text
-                id={name}
-                ref={editableDiv}
-                contentEditable
-                onFocus={e => setEditing(true)}
-                onBlur={handleBlur}
-                onKeyDown={handleKeyDown}
-                onKeyUp={()=>console.log(editableDiv.current.innerHTML)}
-                suppressContentEditableWarning={true}
-            >
-            {editing
-                ? content
-                : <SimpleRender text={content}/>}
-            </Text>
+        <Wrap>
+            <NoteLabel>{name}</NoteLabel>
+            <ContentWrap ref={noteStart} tabIndex={0}>
+                <Text
+                    id={name}
+                    ref={editableDiv}
+                    contentEditable
+                    onFocus={e => setEditing(true)}
+                    onBlur={handleBlur}
+                    onKeyDown={handleKeyDown}
+                    onKeyUp={()=>console.log(editableDiv.current.innerHTML)}
+                    suppressContentEditableWarning={true}
+                >
+                {editing
+                    ? content
+                    : <SimpleRender text={content}/>}
+                </Text>
+            </ContentWrap>
         </Wrap>
     );
 };

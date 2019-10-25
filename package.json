@@ -6,6 +6,10 @@
   "main": "src/index.tsx",
   "homepage": "https://curse.github.io/notes",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-regular-svg-icons": "^5.11.2",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/react-fontawesome": "^0.1.7",
     "@types/lodash": "^4.14.141",
     "@types/react-router-dom": "^5.1.0",
     "@types/styled-components": "^4.1.19",
@@ -38,7 +42,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "predeploy":  "npm run build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
   "browserslist": [

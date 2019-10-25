@@ -15,6 +15,10 @@ import styled, {ThemeProvider} from 'styled-components'
 import EditableDiv from './editable-div'
 import * as theme from './config/theme'
 import { createGlobalStyle } from "styled-components"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleDoubleUp } from '@fortawesome/free-solid-svg-icons/faAngleDoubleUp'
+import { faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons/faAngleDoubleDown'
+import bgi from './sheet-bg.png'
 
 import "normalize.css";
 
@@ -35,34 +39,75 @@ firebase.auth().onAuthStateChanged( user => store.dispatch(setUser(user)))
 
 
 const GlobalStyle = createGlobalStyle`
-  @import url("https://fonts.googleapis.com/css?family=Lato&display=swap");
+  @import url("https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed&display=swap");
 
   * {
     box-sizing: border-box;
   }
+
+  body {
+    background-image: url(${bgi});
+    background-position: center top;
+  }
 `
 
 const Wrap = styled.div`
-  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
-    "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'Roboto', sans-serif;
 `
 
-const App = () => (
-  <ThemeProvider theme={theme}>
-    <Provider store={store}>
-      <Wrap>
-        <GlobalStyle/>
-        <ForceAuth>
-          <UserBar/>
-          <ConnectedRouter history={history}>
-            <Route exact={true} path="/notes/" component={Home} />
-            <Route path="/notes/p/:pageId" component={Page} />
-          </ConnectedRouter>
-        </ForceAuth>
-      </Wrap>
-    </Provider>
-  </ThemeProvider>
-);
+const NotesBar = styled.div`
+  position: fixed;
+  bottom: 0;
+  right: 30px;
+  width: 450px;
+  background-color: #fff;
+  border-color: ${({theme})=>theme.highlight};
+  border-style: solid;
+  border-width: 3px;
+  border-bottom: 0;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+  height: 31px;
+  &.open {
+    height: 400px;
+  }
+`
+
+
+const NotesHeader = styled.div`
+  background-color: ${({theme})=>theme.highlight};
+  font-family: 'Roboto Condensed', sans-serif;
+  color: white;
+  padding: 5px 10px 5px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+`
+
+const App = () => {
+  const [open, setOpen] = React.useState(true)
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>
+        <Wrap>
+          <GlobalStyle/>
+          <ForceAuth>
+            <NotesBar className={open ? 'open' : ''}>
+              <NotesHeader onClick={()=>setOpen(!open)}>Road to Redemption<FontAwesomeIcon icon={open ? faAngleDoubleDown: faAngleDoubleUp} /></NotesHeader>
+              <UserBar/>
+              <ConnectedRouter history={history}>
+                <Route exact={true} path="/notes/" component={Home} />
+                <Route path="/notes/p/:pageId" component={Page} />
+              </ConnectedRouter>
+            </NotesBar>
+          </ForceAuth>
+        </Wrap>
+      </Provider>
+    </ThemeProvider>
+  )
+};
 
 const Home = ({ match }) => <EditableDiv name="home"/>
 
