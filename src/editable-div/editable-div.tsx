@@ -29,8 +29,6 @@ const ContentWrap = styled.div`
     width: 100%;
     font-size: 14px;
     width: 100%;
-    
-    
 `
 
 const SaveButton = styled.button`
@@ -50,7 +48,7 @@ const RenderedContent = styled.div`
   top: 0;
   right: 0;
   pointer-events: none;
-  
+  white-space: pre;
   a {
     pointer-events: all;
   }
@@ -96,10 +94,6 @@ const EditableDiv = ({
             setContent(id, newContent)
         }
     }
-
-    const handleBlur = e => {
-        persistEdit()
-    };
 
     const handleKeyDown = e => {
         if (e.key === 'Escape') {
