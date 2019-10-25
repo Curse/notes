@@ -46,9 +46,12 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-image: url(${bgi});
     background-position: center top;
+    @media (min-width: 800px) {
+      background-image: url(${bgi});
+    }
   }
+  
 `
 
 const Wrap = styled.div`
@@ -56,22 +59,28 @@ const Wrap = styled.div`
 `
 
 const NotesBar = styled.div`
-  position: fixed;
-  bottom: 0;
-  right: 30px;
-  width: 450px;
   background-color: #fff;
-  border-color: ${({theme})=>theme.highlight};
-  border-style: solid;
-  border-width: 3px;
-  border-bottom: 0;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
-  height: 31px;
-  &.open {
-    height: 400px;
+  min-height: 100vh;
+  
+  @media (min-width: 800px) {
+    min-height: auto;
+    position: fixed;
+    bottom: 0;
+    right: 30px;
+    width: 450px;
+    border-color: ${({theme})=>theme.highlight};
+    border-style: solid;
+    border-width: 3px;
+    border-bottom: 0;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+    height: 31px;
+      &.open {
+        height: 400px;
+      }
   }
+  
 `
 
 
